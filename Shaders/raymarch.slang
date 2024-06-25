@@ -15,8 +15,7 @@ struct Box
 {
     float3 center;
     float3 radius;
-//	float3 invRadius;
-//	float3x3 rot;
+
 };
 // based on http://www.jcgt.org/published/0007/03/04/paper-lowres.pdf
 bool intersectBox(Box box, Ray ray, bool front)
@@ -36,7 +35,7 @@ bool intersectBox(Box box, Ray ray, bool front)
 
 
 
-float4 rayMarch(float3 pixelpos, float3 t0,float3 t1, float b[20])
+float4 rayMarch(float3 pixelpos, float3 t0,float3 t1, type b[20])
 {
     Ray r;
    
@@ -60,18 +59,18 @@ float4 rayMarch(float3 pixelpos, float3 t0,float3 t1, float b[20])
     #endif
 
     
-    float t = 0.0f;
+    type t = 0.0f;
     int i;
     float h;
     
     int n = 200;
-    float step =1/(float)n ;
+    type step =1/(type)n ;
     float3 pos = r.p + t * r.v;
    
        
     for (i = 0; i <=n; i++)
     {
-        pos = r.p + t * length(t1-t0)* r.v;
+        pos = r.p + (float)t * length(t1-t0)* r.v;
 
         //h = f_p_casteljau_2d(b,t);
         h = bezier_eval(b,t);

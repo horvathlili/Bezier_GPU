@@ -67,6 +67,7 @@ private:
     ref<Buffer> b;
     ref<Buffer> nk;
 
-    int bez_alg = 2;
+    int bez_alg = 4;
+    int nk_input = 0; //0 - structured buffer, 1 - const buffer
     
 };

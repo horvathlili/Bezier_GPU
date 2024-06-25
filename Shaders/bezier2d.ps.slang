@@ -9,9 +9,11 @@ cbuffer psCb
 };
 
 RWStructuredBuffer<float> x0;
-RWStructuredBuffer<float> nChoosek;
+
+
 //static const tömb nchoosek
 // define tipusra
+// 20 -> N+1
 
  struct psIn
 {
@@ -52,14 +54,14 @@ float3 t0 = input.pixelpos;
         f[i] = map(t0 +(t1-t0)*ch);
     }
 
-    float b[20];
+   type b[20];
 
 
     for (int i = 0; i <= N; i++){
         b[i] = 0;
 
         for (int j = 0; j <= N; j++){
-            b[i] += (f[j]*x0[i*(N+1)+j]);
+            b[i] += (type)(f[j]*x0[i*(N+1)+j]);
 
          }
     }

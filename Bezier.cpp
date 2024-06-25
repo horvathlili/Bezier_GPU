@@ -239,8 +239,16 @@ void Bezier::onFrameRender(RenderContext* pRenderContext, const ref<Fbo>& pTarge
     //pVars["psCb"]["bezierdegree"] = bezierdegree;
     program->addDefine("N",std::to_string(bezierdegree));
     program->addDefine("BEZ", std::to_string(bez_alg));
+    program->addDefine("NK", std::to_string(nk_input));
     pVars["x0"] = b;
-    pVars["nChoosek"] = nk;
+    if (nk_input == 0)
+    {
+        pVars["nChoosek"] = nk;
+    }
+    else
+    {
+        pVars["nChoosek"] = nk;
+    }
    
     pRenderContext->draw(state.get(), vars.get(), 36, 0);
 
