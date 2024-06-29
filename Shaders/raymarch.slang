@@ -35,7 +35,7 @@ bool intersectBox(Box box, Ray ray, bool front)
 
 
 
-float4 rayMarch(float3 pixelpos, float3 t0,float3 t1, type b[20])
+float4 rayMarch(float3 pixelpos, float3 t0,float3 t1, type b[N+1])
 {
     Ray r;
    
@@ -45,7 +45,7 @@ float4 rayMarch(float3 pixelpos, float3 t0,float3 t1, type b[20])
        
 
 
-    #if BEZ == 2 || BEZ == 5
+    #if BEZ == 3 || BEZ == 5
           for (int i = 0; i <= N; i++)
              {
              nChoosek[i] = 1;
@@ -61,16 +61,16 @@ float4 rayMarch(float3 pixelpos, float3 t0,float3 t1, type b[20])
     
     type t = 0.0f;
     int i;
-    float h;
+    type h;
     
     int n = 200;
     type step =1/(type)n ;
-    float3 pos = r.p + t * r.v;
+    type3 pos = r.p + t * r.v;
    
        
     for (i = 0; i <=n; i++)
     {
-        pos = r.p + (float)t * length(t1-t0)* r.v;
+        pos = r.p + t * length(t1-t0)* r.v;
 
         //h = f_p_casteljau_2d(b,t);
         h = bezier_eval(b,t);
@@ -83,11 +83,11 @@ float4 rayMarch(float3 pixelpos, float3 t0,float3 t1, type b[20])
      
     }
 
-    float3 hitpos = pos;
+    type3 hitpos = pos;
     float hit = 1;
     if (i >= n)
         hit = 0;
-    return float4(hitpos, hit);
+    return float4((float3)hitpos, hit);
 }
 
 

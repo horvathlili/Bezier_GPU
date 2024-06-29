@@ -11,9 +11,12 @@ cbuffer psCb
 RWStructuredBuffer<float> x0;
 
 
-//static const tömb nchoosek
+
 // define tipusra
-// 20 -> N+1
+//ui
+//szimbolikus - cpu polinom többszörös gyök
+
+
 
  struct psIn
 {
@@ -22,7 +25,7 @@ RWStructuredBuffer<float> x0;
     float3 pixelpos : POSITION;
 };
 
-float map (float3 p){
+type map (type3 p){
     //return abs(p.x-0.7);
     //return abs(length(p)-0.3);
     return 2*p.y*(p.y*p.y-3*p.x*p.x)*(1-p.z*p.z)+(p.x*p.x+p.y*p.y)*(p.x*p.x+p.y*p.y) - (9*p.z*p.z-1)*(1-p.z*p.z);
@@ -31,7 +34,7 @@ float map (float3 p){
 float4 main (psIn input) : SV_TARGET
 {
 
-float3 t0 = input.pixelpos;
+type3 t0 = input.pixelpos;
 
     Ray r;
    
@@ -44,17 +47,17 @@ float3 t0 = input.pixelpos;
 
       // float3 t1 = intersectBox(box,r,false);
 
-     float3 t1 = r.p+r.v*3;
-    float f[20];
+     type3 t1 = r.p+r.v*3;
+    type f[N+1];
 
     for (int i = 0; i <= N;i++){
 
-        float ch = 0.5+ 0.5*cos((2 * (float)(N-i) +1) / ((float)(N+1) * 2) * PI);
+        type ch = 0.5+ 0.5*cos((2 * (float)(N-i) +1) / ((float)(N+1) * 2) * PI);
 
         f[i] = map(t0 +(t1-t0)*ch);
     }
 
-   type b[20];
+   type b[N+1];
 
 
     for (int i = 0; i <= N; i++){

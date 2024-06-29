@@ -193,6 +193,10 @@ std::vector<float> Bezier::bernsteinmatrix() {
         for (int j = 0; j <= bezierdegree; j++)
         {
             B(i, j) = pow(t, j) * pow(1 - t, bezierdegree - j) * nChoosek[j];
+            if (nk_input == 2)
+            {
+                B(i, j) = pow(t, j) * pow(1 - t, bezierdegree - j);
+            }
         }
     }
 
@@ -242,10 +246,6 @@ void Bezier::onFrameRender(RenderContext* pRenderContext, const ref<Fbo>& pTarge
     program->addDefine("NK", std::to_string(nk_input));
     pVars["x0"] = b;
     if (nk_input == 0)
-    {
-        pVars["nChoosek"] = nk;
-    }
-    else
     {
         pVars["nChoosek"] = nk;
     }

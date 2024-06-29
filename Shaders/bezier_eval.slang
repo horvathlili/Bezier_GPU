@@ -4,7 +4,11 @@
 #endif
 
 #ifndef type
-#define type float
+#define type double
+#endif
+
+#ifndef type3
+#define type3 double3
 #endif
 
 #ifndef BEZ
@@ -16,13 +20,13 @@
 #define NK 0
 #endif
 
- #if NK == 0
+
     RWStructuredBuffer<float> nChoosek;
     static int offset = 0;
-#endif
 
-    #if NK == 1
- static const int nChoosek[] = {
+
+    
+ static const int nChoosek_static[] = {
         1, 1,
         1, 2, 1,
         1, 3, 3, 1,
@@ -45,41 +49,55 @@
         1, 20, 190, 1140, 4845, 15504, 38760, 77520, 125970, 167960, 184756, 167960, 125970, 77520, 38760, 15504, 4845, 1140, 190, 20, 1,
     };
     static const int offsets[] = { 0, 2, 5, 9, 14, 20, 27, 35, 44, 54, 65, 77, 90, 104, 119, 135, 152, 170, 189, 209, 230, };
-    static const int offset = offsets[N-1];
-
-#endif
-
-
-type bezier_eval(type w_y[20],type t){
+    
 
 
 
-#if BEZ == 0
-    return f_p_casteljau_2d(w_y,t);
-#endif
-#if BEZ == 1
-    return f_p_new_2d(w_y,t);
-#endif
-#if BEZ == 2
-    return f_p_3(w_y,t);
-#endif
-#if BEZ == 3
-    return f_p_3(w_y,t);
-#endif
-#if BEZ == 4
-    return f_p_estrin_2d(w_y,t);
-#endif
-#if BEZ == 5
-    return f_p_estrin_2d(w_y,t);
-#endif
+
+type getNK(int i){
+    #if NK == 0
+    return (type)nChoosek[i];
+    #endif
+    #if NK == 1
+    offset = offsets[N-1];
+    return (type)nChoosek_static[i+offset];
+    #endif
+    #if NK == 2
+    return (type)1;
+    #endif
+}
+
+
+type bezier_eval(type w_y[N+1],type t){
+
+
+
+    #if BEZ == 0
+     return f_p_casteljau_2d(w_y,t);
+    #endif
+    #if BEZ == 1
+        return f_p_new_2d(w_y,t);
+    #endif
+    #if BEZ == 2
+        return f_p_3(w_y,t);
+        #endif
+    #if BEZ == 3
+        return f_p_3(w_y,t);
+    #endif
+    #if BEZ == 4
+        return f_p_estrin_2d(w_y,t);
+    #endif
+    #if BEZ == 5
+        return f_p_estrin_2d(w_y,t);
+    #endif
 
 }
 
 
-float f_p_casteljau_2d(float q_y[20],float t)
+type f_p_casteljau_2d(type q_y[N+1],type t)
 {
   
-    float t1 = 1.0 - t;
+    type t1 = 1.0 - t;
  
     for (int k = 1; k <= N; k++)
     {
@@ -91,13 +109,13 @@ float f_p_casteljau_2d(float q_y[20],float t)
     return q_y[0];
 }
 
-float f_p_new_2d(float w_y[20], float t)
+type f_p_new_2d(type w_y[N+1], type t)
 {
-    float h = 1.0;
+    type h = 1.0;
     float u = 1.0 - t;
     int n1 = N + 1;
     
-    float q = w_y[0];
+    type q = w_y[0];
     if (t <= 0.5)
     {
         u = t / u;
@@ -105,7 +123,7 @@ float f_p_new_2d(float w_y[20], float t)
         {
             h = h * u * (n1 - k);
             h = h / (k + h);
-            float h1 = 1 - h;
+            type h1 = 1 - h;
             
             q = h1 * q + h * w_y[k];
         }
@@ -117,7 +135,7 @@ float f_p_new_2d(float w_y[20], float t)
         {
             h = h * (n1 - k);
             h = h / (k * u + h);
-            float h1 = 1 - h;
+            type h1 = 1 - h;
             
             q = h1 * q + h * w_y[k];
         }
@@ -126,13 +144,13 @@ float f_p_new_2d(float w_y[20], float t)
 }
 
 
-float f_p_2(float w_y[20], float t) {
+type f_p_2(type w_y[N+1], type t) {
 
-    float p_x = 0;
-    float p_y = 0;
+    type p_x = 0;
+    type p_y = 0;
 
-    float t1[N+1];
-    float t2[N+1];
+    type t1[N+1];
+    type t2[N+1];
 
     t1[0] = 1.0f;
     t2[N] = 1.0f;
@@ -146,7 +164,7 @@ float f_p_2(float w_y[20], float t) {
 
 
         //p_x += (nChoosek[i] * t1[i] * t2[i] * w_x[i]);
-        p_y += (nChoosek[offset + i] * t1[i] * t2[i] * w_y[i]);
+        p_y += (getNK( i) * t1[i] * t2[i] * w_y[i]);
 
     }
 
@@ -154,18 +172,18 @@ float f_p_2(float w_y[20], float t) {
 
 }
 
-float f_p_3(float w_y[20], float t) {
+type f_p_3(type w_y[N+1], type t) {
 
-    float p_x = 0;
-    float p_y = 0;
+    type p_x = 0;
+    type p_y = 0;
 
 
-    float t1 = 1;
+    type t1 = 1;
 
     for (int i = 0; i <= N; i++) {
 
         //p_x = p_x * (1 - t) + nChoosek[i] * t1 * w_x[i];
-        p_y = p_y * (1 - t) + nChoosek[offset + i] * t1 * w_y[i];
+        p_y = p_y * (1 - t) + getNK( i) * t1 * w_y[i];
 
         t1 *= t;
 
@@ -178,7 +196,7 @@ float f_p_3(float w_y[20], float t) {
 
 
 
-type f_p_estrin_2d(type w_y[20], type t)
+type f_p_estrin_2d(type w_y[N+1], type t)
 {
     
     const int pairCount = (N + 1) / 2;
@@ -191,8 +209,8 @@ type f_p_estrin_2d(type w_y[20], type t)
     for (int i = 0; i < pairCount; ++i)
     {
         //p_x = p_x * mt + (w_x[2 * i] * nChoosek[2 * i] * (1 - t) + w_x[2 * i+1] * nChoosek[2 * i+1] * t) * t2;
-        p_y = p_y * mt + (w_y[2 * i] * (type)nChoosek[offset +  2 * i] * (1 - t) + w_y[2 * i + 1] * (type)nChoosek[offset +  2 * i + 1] * t) * t2;
-
+        p_y = p_y * mt + (w_y[2 * i] * getNK(2* i) * (1 - t) + w_y[2 * i + 1] * getNK( 2*i+1) * t) * t2;
+        
         t2 *= (t * t);
     }
    // q_x[0] += (n % 2) ? p_x : p_x * (1-t) + w_x[n] *t2;

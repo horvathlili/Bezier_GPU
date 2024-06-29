@@ -59,15 +59,16 @@ private:
     ref<Camera> camera;
     ref<CameraController> cameracontrol;
 
-    int nChoosek[20];
-    float chebisev[20];
+    int nChoosek[1000];
+    float chebisev[1000];
 
     int bezierdegree = 5;
     std::vector<float> base;
     ref<Buffer> b;
     ref<Buffer> nk;
 
-    int bez_alg = 4;
-    int nk_input = 0; //0 - structured buffer, 1 - const buffer
+    int bez_alg = 1;
+    //0 - de casteljau, 1- chudy, 2- mienk, 3- mienk + nk, 4- estrin, 5- estrin + nk
+    int nk_input = 1; //0 - structured buffer, 1 - const buffer, 2 - matrixban
     
 };
